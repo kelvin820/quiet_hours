@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {periodAt,periods} from '../dist/catalog.js';
+import {parts,offset,previewInstant} from '../dist/time-utils.js';
+import {getTimes} from '../dist/assets/suncalc.js';
+
+test('every minute of the day belongs to exactly one of eight illustration periods',()=>{assert.equal(periods.length,8);for(let minute=0;minute<1440;minute++){const hour=minute/60;assert.equal(periods.filter(p=>hour>=p.start&&hour<p.end).length,1);}assert.equal(periodAt(0).key,'night');assert.equal(periodAt(4.999).key,'night');assert.equal(periodAt(5).key,'dawn');assert.equal(periodAt(23.999).key,'evening');});
+test('Paris winter preview correctly advances Taipei into the next day',()=>{const date=previewInstant(18*60,'Europe/Paris',new Date('2026-11-05T08:00:00Z'));assert.equal(date.toISOString(),'2026-11-05T17:00:00.000Z');const t=parts(date,'Asia/Taipei');assert.equal(t.hour,1);assert.equal(t.day,6);});
+test('Paris and Taipei daylight saving difference changes between winter and summer',()=>{const winter=new Date('2026-11-05T08:00:00Z'),summer=new Date('2026-07-05T08:00:00Z');assert.equal((offset(winter,'Asia/Taipei')-offset(winter,'Europe/Paris'))/60,7);assert.equal((offset(summer,'Asia/Taipei')-offset(summer,'Europe/Paris'))/60,6);});
+test('Taipei local preview preserves the selected date and minute',()=>{const base=new Date('2026-11-05T08:00:00Z');for(const minute of [0,299,300,419,420,719,720,1019,1020,1139,1140,1439]){const instant=previewInstant(minute,'Asia/Taipei',base),local=parts(instant,'Asia/Taipei');assert.equal(local.day,5);assert.equal(local.hour*60+local.minute,minute);}});
+test('Paris preview at an existing time on DST change day resolves to the correct offset',()=>{const spring=previewInstant(3*60+30,'Europe/Paris',new Date('2026-03-29T10:00:00Z'));assert.equal(spring.toISOString(),'2026-03-29T01:30:00.000Z');const autumn=previewInstant(3*60+30,'Europe/Paris',new Date('2026-10-25T10:00:00Z'));assert.equal(autumn.toISOString(),'2026-10-25T02:30:00.000Z');});
+test('sunrise and sunset use the selected city calendar date, including just after midnight',()=>{for(const [zone,lat,lon]of [['Asia/Taipei',25.033,121.5654],['Europe/Paris',48.8584,2.2945]])for(const minute of [30,720,1439]){const date=previewInstant(minute,zone,new Date('2026-11-05T08:00:00Z')),noon=previewInstant(720,zone,date),times=getTimes(noon,lat,lon);assert.equal(parts(times.sunrise,zone).day,5);assert.equal(parts(times.sunset,zone).day,5);}});
