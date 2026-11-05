@@ -6,7 +6,7 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enable
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(33,1,.1,120);camera.position.set(17,13.5,23);camera.lookAt(0,3,0);scene.fog=new THREE.Fog('#dedfcd',30,75);
 const hemi=new THREE.HemisphereLight('#fff5dd','#687c68',2.2);scene.add(hemi);const sun=new THREE.DirectionalLight('#ffddad',3);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-16,right:16,top:16,bottom:-16,near:1,far:90});sun.shadow.bias=-.0005;sun.shadow.normalBias=.04;scene.add(sun);scene.add(sun.target);
 const moon=new THREE.DirectionalLight('#a5bbef',.12);moon.position.set(-10,15,8);scene.add(moon);
-const root=new THREE.Group();scene.add(root);
+const root=new THREE.Group();scene.add(root);const dryCity=['riyadh','mexicocity'].includes(city),desertCity=city==='riyadh';
 const material=(color,roughness=.95)=>new THREE.MeshStandardMaterial({color,roughness,metalness:0});
 const limestone=material('#d5c3a0'),roofMat=material('#657178'),pathMat=material('#d8c8a6'),grassMat=material('#a8b088'),baseMat=material('#c0c7a2'),iron=material('#877356'),trim=material('#9d8a68'),waterMat=new THREE.MeshStandardMaterial({color:'#8bafb0',roughness:.4,metalness:.16}),trunk=material('#8d8163'),leaves=[material('#829566'),material('#9ba879'),material('#6f885e')],windowMat=new THREE.MeshStandardMaterial({color:'#667a7a',emissive:'#ffbc65',emissiveIntensity:0,roughness:.7});
 function mesh(geometry,mat,x=0,y=0,z=0,parent=root){const m=new THREE.Mesh(geometry,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
@@ -14,7 +14,8 @@ function box(w,h,d,mat,x,y,z,parent=root){return mesh(new THREE.BoxGeometry(w,h,
 function beam(a,b,width=.045,mat=iron,parent=root){const from=new THREE.Vector3(...a),to=new THREE.Vector3(...b),delta=to.clone().sub(from);const m=mesh(new THREE.CylinderGeometry(width,width,delta.length(),5),mat,0,0,0,parent);m.position.copy(from.add(to).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());return m;}
 // A hand-built miniature: no external model or texture dependency.
 mesh(new THREE.CylinderGeometry(10.8,10.3,.72,96),baseMat,0,-.42,0);mesh(new THREE.CylinderGeometry(10.65,10.65,.08,96),grassMat,0,-.02,0);
-box(18,.06,2.25,waterMat,0,.04,4.1);box(19,.12,.3,pathMat,0,.09,2.78);box(18,.12,.3,pathMat,0,.09,5.4);box(3.2,.035,10,pathMat,-1,.08,-1.25);
+if(desertCity){grassMat.color.set('#c6b78e');baseMat.color.set('#c9b98e');limestone.color.set('#d8c49c');roofMat.color.set('#b49a76');}
+box(18,.06,2.25,dryCity?pathMat:waterMat,0,.04,4.1);box(19,.12,.3,pathMat,0,.09,2.78);box(18,.12,.3,pathMat,0,.09,5.4);box(3.2,.035,10,pathMat,-1,.08,-1.25);
 const tower=new THREE.Group();tower.position.set(-1,.1,-1.1);root.add(tower);
 if(city==='paris'){
 const heights=[0,1.25,2.65,3.1,4.7,5.1,7.2,8.75,9.35],radii=[2.05,1.38,.92,.86,.48,.43,.22,.14,.12];
@@ -50,9 +51,9 @@ building(-5.7,-4.1,2.7,1.55,2.75,'#e5d9bc');building(-2.4,-6.1,2.55,1.6,2.35,'#d
 function tree(x,z,size=1){const g=new THREE.Group();g.position.set(x,.1,z);root.add(g);mesh(new THREE.CylinderGeometry(.045,.08,.9*size,6),trunk,0,.45*size,0,g);mesh(new THREE.SphereGeometry(.5*size,7,6),leaves[Math.abs(Math.round(x+z))%3],0,1.15*size,0,g).scale.set(.85,1.3,.85);}
 for(let i=0;i<9;i++){tree(-7.4+i*1.8,2.05,.65+(i%3)*.12);tree(-7.4+i*1.8,6.1,.75+(i%3)*.1);}for(const [x,z]of [[-4,-2],[-4.5,0],[2,-3],[3,0],[-5.6,-2],[4.5,1],[-6,6.8],[1,7]])tree(x,z,.9);
 // A stone footbridge spans the river, with open railings.
-box(1.15,.24,3.1,limestone,3.2,.58,4.1);for(const x of [2.67,3.73]){beam([x,.96,2.55],[x,.96,5.65],.035,trim);for(let z=2.6;z<=5.65;z+=.3)beam([x,.65,z],[x,.96,z],.025,trim);}for(const z of [3.15,5.05])box(.7,.65,.22,limestone,3.2,.25,z);
-const boat=new THREE.Group();boat.position.set(-4,.22,4.1);root.add(boat);box(1.25,.16,.43,material('#f3e9cc'),0,0,0,boat);box(.67,.23,.32,roofMat,0,.18,0,boat);box(.46,.08,.36,limestone,0,.34,0,boat);
-const ripples=[];for(let i=0;i<22;i++){const ripple=box(.3+(i%4)*.15,.012,.018,material('#c7d6cb'),-8+(i*2.37)%16,.085,3.25+(i*.43)%1.7);ripple.castShadow=false;ripples.push(ripple);}
+if(!dryCity){box(1.15,.24,3.1,limestone,3.2,.58,4.1);for(const x of [2.67,3.73]){beam([x,.96,2.55],[x,.96,5.65],.035,trim);for(let z=2.6;z<=5.65;z+=.3)beam([x,.65,z],[x,.96,z],.025,trim);}for(const z of [3.15,5.05])box(.7,.65,.22,limestone,3.2,.25,z);}
+const boat=new THREE.Group();boat.position.set(-4,.22,4.1);root.add(boat);boat.visible=!dryCity;box(1.25,.16,.43,material('#f3e9cc'),0,0,0,boat);box(.67,.23,.32,roofMat,0,.18,0,boat);box(.46,.08,.36,limestone,0,.34,0,boat);
+const ripples=[];for(let i=0;i<22;i++){const ripple=box(.3+(i%4)*.15,.012,.018,material('#c7d6cb'),-8+(i*2.37)%16,.085,3.25+(i*.43)%1.7);ripple.castShadow=false;ripple.visible=!dryCity;ripples.push(ripple);}
 const lampMat=new THREE.MeshStandardMaterial({color:'#eee5be',emissive:'#ffca72',emissiveIntensity:0});for(const x of [-6,-3,0,6]){beam([x,.12,2.8],[x,1.04,2.8],.025,iron);mesh(new THREE.SphereGeometry(.09,8,6),lampMat,x,1.08,2.8);}
 const starsGeo=new THREE.BufferGeometry();const starPositions=[];let seed=74;const random=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646;};for(let i=0;i<110;i++)starPositions.push((random()-.5)*65,12+random()*20,-16-random()*20);starsGeo.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));const starMat=new THREE.PointsMaterial({color:'#f8f1d2',size:.07,transparent:true,opacity:0});scene.add(new THREE.Points(starsGeo,starMat));
 let visible=true,disposed=false;

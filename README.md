@@ -1,11 +1,11 @@
 # 兩地之間 · Quiet Hours
 
-七城 MVP：台北、巴黎、舊金山、慕尼黑、倫敦、巴塞隆納、紐約均有 Live View、2D 插畫、3D 動畫三模式，另有一鍵沉浸式屏保頁面。
+16城 MVP：台北、巴黎、舊金山、慕尼黑、倫敦、巴塞隆納、紐約、雪梨、東京、杜拜、里約、開羅、利雅德、曼谷、檀香山、墨西哥城均有 Live View、2D 插畫、3D 動畫三模式，另有一鍵沉浸式屏保頁面。
 
 執行 `node server.mjs`，開啟 http://localhost:4173 。無建置步驟，Three.js 與 SunCalc 依賴已存於 dist/assets。
 
 ## 已完成
-- 每城市 8 幅獨立時段插畫，共 56 幅；夜景、晨曦、傍晚等均為獨立生成資產。
+- 每城市 8 幅獨立時段插畫，共 128 幅；夜景、晨曦、傍晚等均為獨立生成資產。
 - 水面遮罩內的逐行微小位移，形成波紋與倒影流動；陸地與建築穩定。不是實際 .gif。
 - 每個城市可獨立切換 Live View／2D 插畫／3D 動畫，模式偏好會保存在瀏覽器。
 - 巴黎鐵塔、台北101的程序生成微縮模型，隨日期、位置、當前時間改變日照與陰影。
@@ -23,7 +23,7 @@
 
 ## 驗證
 `node --test tests/*.test.mjs`
-涵蓋八時段全部分鐘、跨日、夏令時間、既存DST時刻、午夜當地日出日落日期，以及56幅獨立圖像資產存在與格式檢查。瀏覽器另檢查模式切換、時間預覽、沉浸進出、桌面與手機構圖。
+涵蓋八時段全部分鐘、跨日、夏令時間、既存DST時刻、午夜當地日出日落日期，以及128幅獨立圖像資產存在與格式檢查。瀏覽器另檢查模式切換、時間預覽、沉浸進出、桌面與手機構圖。
 
 ## 素材與授權
 - 插畫使用內建 imagegen，完整提示詞見 ART-DIRECTION.md 與 ART-PROMPTS-V2.md。原始PNG在 artwork/originals，網站使用經一般編碼壓縮的JPEG。
@@ -86,3 +86,18 @@
 
 ## MVP 基線
 本輪開發前已接受版本：source commit `d5e55d73b483d18a1effae285dba93748d904924`；Site version `appgprj_6aec3937d420819190ec694d2acbdabb~appgver_5ff69f9cb8488191b94b608bb95bb402`。
+
+## 九城新增與全時區搜尋（2026-11-06）
+- 九城各8張分時段畫作，加原7城共16城128幅；原始PNG、網站JPEG與完整prompt記錄均保留。提示詞見 ART-PROMPTS-WORLD-CITIES.md。
+- 新增Sydney/SYD、Tokyo/Toky/TYO/HND/NRT、Dubai/DXB、Rio de Janeiro/RIO、Cairo/CAI、Riyadh/RUH、Bangkok/BKK、Hawaii/Honolulu/HNL、Mexico/Mexico City/MEX。
+- 200個城市／聚落可搜尋。包含9個新增偏遠時區代表，確保有人居住的每個整點UTC時差都有可用時鐘與通用場景。
+- 支援UTC+9、UTC−8等時差搜尋，依當前或預覽日期計算，不把雪梨、開羅等城市永久固定成單一UTC值。
+- 2026全年8,760小時覆蓋檢查通過；報告與尚待專屬素材的17個補強城市建議見 UTC-OFFSET-COVERAGE.md。
+- 九城專屬3D地標已接入；利雅德與墨西哥城改為乾地景觀，不顯示河流、小船或水波。
+- 新增透明櫻葉、藍花楹、尤加利、熱帶花葉、棕櫚圖層；建築保持固定。
+- 杜拜與開羅的公開攝影機最近查核回報離線，在Live View明確顯示日期及狀態；其他來源仍由外連頁面觀看。
+- 音樂內容依既有決定暫不重做。
+
+## GitHub Pages
+線上網站：https://kelvin820.github.io/quiet_hours/
+`.github/workflows/pages.yml`只發布dist成品，每次main的網站內容更新自動部署，不再把根目錄README發布成首頁。

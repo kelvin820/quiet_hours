@@ -1,0 +1,10 @@
+import {locations} from '../dist/locations.js';
+import {featuredCityIds} from '../dist/featured-city-ids.js';
+import {pathToFileURL} from 'node:url';
+const formatters=new Map();
+export function utcHourAt(date,zone){let formatter=formatters.get(zone);if(!formatter){formatter=new Intl.DateTimeFormat('en-US',{timeZone:zone,timeZoneName:'longOffset'});formatters.set(zone,formatter);}const name=formatter.formatToParts(date).find(p=>p.type==='timeZoneName').value;if(name==='GMT')return 0;const match=name.match(/^GMT([+-])(\d{2}):(\d{2})$/);if(!match)throw Error('Unexpected UTC offset: '+name);return (match[1]==='-'?-1:1)*(Number(match[2])+Number(match[3])/60);}
+export function auditCoverage(year=2026){const expected=Array.from({length:26},(_,i)=>i-11),entries=Object.values(locations),featured=new Set(featuredCityIds),missingSearch=new Set(),missingDedicated=new Set(),dedicatedDates={};let hours=0;const zones=[...new Set(entries.map(c=>c.zone))],featuredZones=new Set(entries.filter(c=>featured.has(c.id)).map(c=>c.zone));
+ for(let day=Date.UTC(year,0,1);day<Date.UTC(year+1,0,1);day+=3600000){const date=new Date(day),all=new Set(),dedicated=new Set();hours++;for(const zone of zones){const value=utcHourAt(date,zone);if(Number.isInteger(value)){all.add(value);if(featuredZones.has(zone))dedicated.add(value);}}for(const value of expected){if(!all.has(value))missingSearch.add(value);if(!dedicated.has(value)){missingDedicated.add(value);(dedicatedDates[value]??=new Set()).add(date.toISOString().slice(0,10));}}}
+ for(const value of Object.keys(dedicatedDates))dedicatedDates[value]=[...dedicatedDates[value]];return {year,hours,days:hours/24,searchable:entries.length,featured:featured.size,range:{from:-11,to:14},missingSearch:[...missingSearch].sort((a,b)=>a-b),missingDedicated:[...missingDedicated].sort((a,b)=>a-b),dedicatedDates};
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)console.log(JSON.stringify(auditCoverage(Number(process.argv[2])||2026),null,2));

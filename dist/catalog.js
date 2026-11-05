@@ -1,3 +1,4 @@
+import {worldCityDetails} from './world-city-details.js';
 import {locations} from './locations.js';
 // City metadata and eight illustrated periods are separate from rendering engines.
 export const cities={
@@ -24,6 +25,8 @@ const additions=[
  ['newyork','USA · 美國','天際線很高，此刻可以很慢。','EarthCam · 時代廣場','https://www.earthcam.com/usa/newyork/timessquare/',.38]
 ];
 additions.forEach(([id,country,caption,liveName,url,focus],i)=>{cities[id]={...locations[id],country,artPrefix:id,caption,tagline:`A SLOW DAY IN ${locations[id].english.toUpperCase()}`,live:{name:liveName,url,type:'external'},water:{start:id==='newyork'?.84:.85,left:0,foreground:false,focus,motion:{phase:2.4+i*1.39,rate:.47+i*.037,amplitude:3.5,band:.042+i*.005,secondary:.087+i*.009,drift:2.8+i*.17,direction:i%2?-1:1}}};});
+Object.entries(worldCityDetails).forEach(([id,details],i)=>{const c=locations[id];cities[id]={...c,...details,artPrefix:id,tagline:'A SLOW DAY IN '+c.english.toUpperCase(),water:{enabled:!details.dry,start:.85,left:0,foreground:false,focus:details.focus,motion:{phase:3.8+i*1.27,rate:.48+(i%5)*.035,amplitude:3.5,band:.041+(i%4)*.007,secondary:.09+(i%3)*.011,drift:2.85+(i%5)*.15,direction:i%2?1:-1}}};});
+cities.cairo.water.foreground=true;cities.cairo.water.left=.18;
 cities.paris.water.focus=.27;cities.taipei.water.focus=.76;
 export function cityInfo(id){const location=locations[id];return cities[id]?{...location,...cities[id]}:{...location,country:location.zone.split('/')[0],caption:'在同一個此刻，留一扇安靜的窗。',tagline:'A QUIET MOMENT',live:null,water:{start:.85,left:0,focus:.5,foreground:false,motion:{phase:3,rate:.5,amplitude:3,band:.05,secondary:.1,drift:3,direction:1}}};}
 export function artUrl(city,period){return cities[city]?.artPrefix?`assets/${cities[city].artPrefix}-${period.key}.jpg`:null;}

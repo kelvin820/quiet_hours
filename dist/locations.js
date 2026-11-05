@@ -1,3 +1,5 @@
+import {featuredCityIds} from './featured-city-ids.js';
+import {offset} from './time-utils.js';
 // City centers (not airport coordinates). IANA zone identifiers drive civil time/DST.
 // Timezone reference: https://data.iana.org/time-zones/tzdb/zone1970.tab
 // Airport and metropolitan codes are search aliases; multiple airports resolve to one city.
@@ -13,7 +15,7 @@ const rows=[
  ['taichung','台中','Taichung','Asia/Taipei',24.1477,120.6736,'RMQ','臺中|台中市|臺中市'],
  ['tainan','台南','Tainan','Asia/Taipei',22.9999,120.2269,'TNN','臺南|台南市|臺南市'],
  ['hualien','花蓮','Hualien','Asia/Taipei',23.9872,121.6015,'HUN','花莲'],
- ['tokyo','東京','Tokyo','Asia/Tokyo',35.6762,139.6503,'TYO HND NRT','东京|羽田|成田|Haneda|Narita'],
+ ['tokyo','東京','Tokyo','Asia/Tokyo',35.6762,139.6503,'TYO HND NRT','东京|羽田|成田|Haneda|Narita|Toky'],
  ['osaka','大阪','Osaka','Asia/Tokyo',34.6937,135.5023,'OSA KIX ITM','關西|关西|Kansai|Itami'],
  ['kyoto','京都','Kyoto','Asia/Tokyo',35.0116,135.7681,'','京都市'],
  ['nagoya','名古屋','Nagoya','Asia/Tokyo',35.1815,136.9066,'NGO NKM','Chubu|中部國際|中部国际'],
@@ -148,7 +150,7 @@ const rows=[
  ['orlando','奧蘭多','Orlando','America/New_York',28.5383,-81.3792,'ORL MCO SFB','奥兰多|Sanford'],
  ['detroit','底特律','Detroit','America/Detroit',42.3314,-83.0458,'DTT DTW','Detroit Michigan'],
  ['minneapolis','明尼阿波利斯','Minneapolis','America/Chicago',44.9778,-93.265,'MSP','明尼亞波利斯|明尼亚波利斯|Saint Paul|Twin Cities'],
- ['honolulu','檀香山','Honolulu','Pacific/Honolulu',21.3099,-157.8581,'HNL','火奴魯魯|火奴鲁鲁|Oahu|歐胡島|欧胡岛'],
+ ['honolulu','檀香山','Honolulu','Pacific/Honolulu',21.3099,-157.8581,'HNL','火奴魯魯|火奴鲁鲁|Oahu|歐胡島|欧胡岛|Hawaii|夏威夷'],
  ['anchorage','安克拉治','Anchorage','America/Anchorage',61.2181,-149.9003,'ANC','安克雷奇'],
  ['vancouver','溫哥華','Vancouver','America/Vancouver',49.2827,-123.1207,'YVR','温哥华'],
  ['toronto','多倫多','Toronto','America/Toronto',43.6532,-79.3832,'YTO YYZ YTZ','多伦多|Pearson|Billy Bishop'],
@@ -156,7 +158,7 @@ const rows=[
  ['calgary','卡加利','Calgary','America/Edmonton',51.0447,-114.0719,'YYC','卡尔加里|卡爾加里'],
  ['edmonton','愛德蒙頓','Edmonton','America/Edmonton',53.5461,-113.4938,'YEA YEG','埃德蒙顿|埃德蒙頓'],
  ['ottawa','渥太華','Ottawa','America/Toronto',45.4215,-75.6972,'YOW','渥太华'],
- ['mexicocity','墨西哥城','Mexico City','America/Mexico_City',19.4326,-99.1332,'MEX NLU','Ciudad de Mexico|Ciudad de México|CDMX'],
+ ['mexicocity','墨西哥城','Mexico City','America/Mexico_City',19.4326,-99.1332,'MEX NLU','Ciudad de Mexico|Ciudad de México|CDMX|Mexico|墨西哥'],
  ['cancun','坎昆','Cancún','America/Cancun',21.1619,-86.8515,'CUN','Cancun'],
  ['panamacity','巴拿馬城','Panama City','America/Panama',8.9824,-79.5199,'PTY','巴拿马城|Ciudad de Panama'],
  ['sanjo secostarica','聖荷西（哥斯大黎加）','San José Costa Rica','America/Costa_Rica',9.9281,-84.0907,'SJO','San Jose Costa Rica|哥斯大黎加聖荷西|哥斯达黎加圣何塞'],
@@ -193,9 +195,18 @@ const rows=[
  ['nadi','楠迪','Nadi','Pacific/Fiji',-17.7765,177.4356,'NAN','南迪|Fiji|斐濟|斐济'],
  ['papeete','帕皮提','Papeete','Pacific/Tahiti',-17.5516,-149.5585,'PPT','大溪地|Tahiti'],
  ['guam','關島','Guam','Pacific/Guam',13.4443,144.7937,'GUM','关岛|Hagatna|Hagåtña'],
+ ['pagopago','帕果帕果','Pago Pago','Pacific/Pago_Pago',-14.2756,-170.702,'PPG','美屬薩摩亞|美属萨摩亚|American Samoa'],
+ ['rikitea','里基泰阿','Rikitea','Pacific/Gambier',-23.119,-134.97,'GMR','甘比爾群島|甘比尔群岛|Mangareva|Gambier Islands'],
+ ['adamstown','亞當斯敦','Adamstown','Pacific/Pitcairn',-25.066,-130.1006,'','亚当斯敦|皮特肯島|皮特凯恩|Pitcairn'],
+ ['bridgetown','橋鎮','Bridgetown','America/Barbados',13.0975,-59.6167,'BGI','桥镇|巴貝多|巴巴多斯|Barbados'],
+ ['fernandodenoronha','費爾南多迪諾羅尼亞','Fernando de Noronha','America/Noronha',-3.8549,-32.4233,'FEN','费尔南多迪诺罗尼亚|諾羅尼亞|诺罗尼亚|Noronha'],
+ ['praia','普拉亞','Praia','Atlantic/Cape_Verde',14.9167,-23.509,'RAI','普拉亚|維德角|佛得角|Cape Verde|Cabo Verde'],
+ ['noumea','努美阿','Nouméa','Pacific/Noumea',-22.2758,166.4581,'NOU GEA','Noumea|新喀里多尼亞|新喀里多尼亚|New Caledonia'],
+ ['nukualofa','努瓜婁發','Nukuʻalofa','Pacific/Tongatapu',-21.1394,-175.2049,'TBU','努库阿洛法|Nukualofa|Nuku alofa|東加|汤加|Tonga'],
+ ['kiritimati','基里蒂馬蒂島','Kiritimati','Pacific/Kiritimati',1.8721,-157.4278,'CXI','基里蒂马蒂|Christmas Island Kiribati|吉里巴斯聖誕島|基里巴斯圣诞岛'],
 ];
 
-const featuredIds=new Set(['taipei','paris','sanfrancisco','munich','london','barcelona','newyork']);
+const featuredIds=new Set(featuredCityIds);
 export const locations=Object.fromEntries(rows.map(([id,name,english,zone,lat,lon,codes,aliases])=>{
  id=id.replace(/\s+/g,'');
  const location={id,name,english,zone,lat,lon,codes:codes?codes.split(' '):[],aliases:aliases?aliases.split('|'):[],featured:featuredIds.has(id)};
@@ -208,9 +219,11 @@ const entries=Object.values(locations).map(location=>({location,names:[location.
 const preferredOrder=[...featuredIds];
 function compare(a,b){return a.rank-b.rank||Number(b.location.featured)-Number(a.location.featured)||(a.location.featured&&b.location.featured?preferredOrder.indexOf(a.location.id)-preferredOrder.indexOf(b.location.id):a.location.english.localeCompare(b.location.english,'en'));}
 
-export function searchLocations(query,limit=20){
+export function searchLocations(query,limit=20,date=new Date()){
  const key=normalizeLocationQuery(query),maximum=Number.isFinite(Number(limit))?Math.max(0,Math.floor(Number(limit))):20;
  if(!maximum)return [];
+ const utc=String(query).trim().match(/^(?:UTC|GMT)\s*([+−-])?\s*(\d{1,2})(?::([0-5]\d))?$/i);
+ if(utc){const minutes=(utc[1]==='-'||utc[1]==='−'?-1:1)*(Number(utc[2])*60+Number(utc[3]||0));if(minutes< -720||minutes>840)return [];return entries.filter(e=>offset(date,e.location.zone)===minutes).map(e=>({location:e.location,rank:0})).sort(compare).slice(0,maximum).map(e=>e.location);}
  return entries.map(entry=>{let rank;if(!key)rank=10;else if(entry.codes.includes(key))rank=0;else if(entry.names.includes(key))rank=1;else if(entry.names.some(name=>name.startsWith(key))||entry.codes.some(code=>code.startsWith(key)))rank=2;else if(entry.names.some(name=>name.includes(key)))rank=3;else return null;return{location:entry.location,rank};}).filter(Boolean).sort(compare).slice(0,maximum).map(entry=>entry.location);
 }
 
