@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {initialSelection,selectionURL} from '../dist/selection.js';
+import {cityInfo,artUrl,periods} from '../dist/catalog.js';
+import {parts,offset} from '../dist/time-utils.js';
+test('URL airport aliases take priority, saved choices remain independent, unknown inputs fall back',()=>{assert.deepEqual(initialSelection('?left=SFO&right=MUC',{left:'taipei',right:'paris'}),{left:'sanfrancisco',right:'munich'});assert.deepEqual(initialSelection('?left=NYC&right=NYC'),{left:'newyork',right:'newyork'});assert.deepEqual(initialSelection('?left=Europe/Paris&right=Asia/Taipei'),{left:'paris',right:'taipei'});assert.deepEqual(initialSelection('?left=nonsense',{right:'LAS'}),{left:'paris',right:'lasvegas'});});
+test('share URL round trip preserves both chosen cities and other parameters',()=>{const chosen={left:'london',right:'barcelona'},url=selectionURL('https://example.com/?demo=1',chosen);assert.deepEqual(initialSelection(url.search),chosen);assert.equal(url.searchParams.get('demo'),'1');});
+test('city swaps share an instant but update local calendar, half-hour offset and seasonal time',()=>{const instant=new Date('2026-11-05T20:00:00Z');assert.equal(parts(instant,cityInfo('taipei').zone).hour,4);assert.equal(parts(instant,cityInfo('newyork').zone).hour,15);assert.equal(offset(instant,cityInfo('london').zone),0);assert.equal(offset(instant,cityInfo('mumbai').zone),330);assert.equal(offset(new Date('2026-07-05T20:00:00Z'),cityInfo('london').zone),60);});
+test('unfeatured cities keep their own coordinates and timezone without borrowing another city painting',()=>{const city=cityInfo('lasvegas');assert.equal(city.zone,'America/Los_Angeles');assert.equal(city.live,null);assert.equal(artUrl('lasvegas',periods[0]),null);assert.equal(city.artPrefix,undefined);assert.equal(cityInfo('munich').artPrefix,'munich');});

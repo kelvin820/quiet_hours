@@ -1,11 +1,11 @@
 # 兩地之間 · Quiet Hours
 
-第二輪可互動小樣：台北／巴黎均有 Live View、2D 插畫、3D 動畫三模式，另有一鍵沉浸式屏保頁面。
+七城 MVP：台北、巴黎、舊金山、慕尼黑、倫敦、巴塞隆納、紐約均有 Live View、2D 插畫、3D 動畫三模式，另有一鍵沉浸式屏保頁面。
 
 執行 `node server.mjs`，開啟 http://localhost:4173 。無建置步驟，Three.js 與 SunCalc 依賴已存於 dist/assets。
 
 ## 已完成
-- 每城市 8 幅獨立時段插畫，共 16 幅；夜景、晨曦、傍晚等均為獨立生成資產。
+- 每城市 8 幅獨立時段插畫，共 56 幅；夜景、晨曦、傍晚等均為獨立生成資產。
 - 水面遮罩內的逐行微小位移，形成波紋與倒影流動；陸地與建築穩定。不是實際 .gif。
 - 每個城市可獨立切換 Live View／2D 插畫／3D 動畫，模式偏好會保存在瀏覽器。
 - 巴黎鐵塔、台北101的程序生成微縮模型，隨日期、位置、當前時間改變日照與陰影。
@@ -16,14 +16,14 @@
 - Live View 目前為清楚標示的公開來源外連。尚未完成內嵌來源驗證，不假裝直播已在本頁播放。
 
 ## 尚待後續
-- 其他五個優先城市與完整城市／IATA搜尋。
+- 擴充更多城市的專屬插畫（其餘地點已可搜尋並使用通用光景）。
 - 更完整的地方特色時鐘（例如德國咕咕鐘）及每幅場景的生活活動設計。
 - Live View 可嵌入來源驗證與接入。
 - 2D 動態目前以河水為主，尚未替每幅圖製作獨立樹葉、角色等動畫圖層。
 
 ## 驗證
-`node --test tests/time.test.mjs tests/assets.test.mjs`
-涵蓋八時段全部分鐘、跨日、夏令時間、既存DST時刻、午夜當地日出日落日期，以及16幅獨立圖像資產存在與格式檢查。瀏覽器另檢查模式切換、時間預覽、沉浸進出、桌面與手機構圖。
+`node --test tests/*.test.mjs`
+涵蓋八時段全部分鐘、跨日、夏令時間、既存DST時刻、午夜當地日出日落日期，以及56幅獨立圖像資產存在與格式檢查。瀏覽器另檢查模式切換、時間預覽、沉浸進出、桌面與手機構圖。
 
 ## 素材與授權
 - 插畫使用內建 imagegen，完整提示詞見 ART-DIRECTION.md 與 ART-PROMPTS-V2.md。原始PNG在 artwork/originals，網站使用經一般編碼壓縮的JPEG。
@@ -62,3 +62,27 @@
 - 河水主波與反光在前版基礎上再加速1.75倍；獨立相位、方向、波長與波幅保留。
 - 兩層雲的單程動畫時間由24／32秒改為12／16秒，即移動速度提高2倍。
 - 樹葉、建築、音樂與換圖過渡保持本輪前的設定。
+
+## 七城擴充與城市搜尋（2026-11-05）
+- 七城各八幅獨立時段底圖，共56幅；新增五城的完整生成提示詞見 ART-PROMPTS-SEVEN-CITIES.md。
+- 搜尋191座城市，支援繁簡中文、英文、重音符號與機場／都會代號。SFO、LAS、MUC、BCN、TPE、NYC、CDG、LHR等可直接搜尋。
+- 左右以獨立面板識別，可同時選同一城市；選取同步更新日期、時區、夏令時間、日出日落、場景及公開影像入口。
+- URL查詢 left/right 與瀏覽器本地偏好保存兩城及模式；分享網址可重現兩城組合。
+- 一般模式點城市名稱，沉浸模式點掛鐘城市名稱開啟搜尋；支援方向鍵、Enter、Escape。
+- 五座新增3D地標：金門大橋、慕尼黑雙塔及市政廳、倫敦大笨鐘與倫敦眼、聖家堂、紐約天際線。模型是藝術化微縮景觀。
+- 慕尼黑沉浸掛鐘新增木屋屋頂與鐘擺；其他模式與音樂內容保留既有MVP方向。
+- 其餘184座城市明確標示通用光景，不冒用其他城市的專屬插畫，也不宣稱已有確認的直播來源。
+- 圖片記憶體快取每面板上限10幅；換3D城市會釋放舊幾何、材質與ResizeObserver，保留畫布可重新使用的WebGL context。
+
+## Live View 來源
+公開頁面於2026-11-05查核；目前外連觀看，不宣稱已取得第三方內嵌授權。
+- 台北：https://travel.taipei/4k-livestream/
+- 巴黎：https://www.earthtv.com/en/webcam/paris-eiffel-tower
+- 舊金山：https://abc7news.com/weather/cams/
+- 慕尼黑：https://www.munich.travel/en/webcam
+- 倫敦：https://www.abbeyroad.com/crossing?mode=live
+- 巴塞隆納：https://portolimpic.barcelona/es/meteo-y-webcams
+- 紐約：https://www.earthcam.com/usa/newyork/timessquare/
+
+## MVP 基線
+本輪開發前已接受版本：source commit `d5e55d73b483d18a1effae285dba93748d904924`；Site version `appgprj_6aec3937d420819190ec694d2acbdabb~appgver_5ff69f9cb8488191b94b608bb95bb402`。

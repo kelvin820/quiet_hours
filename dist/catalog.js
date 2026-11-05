@@ -1,3 +1,4 @@
+import {locations} from './locations.js';
 // City metadata and eight illustrated periods are separate from rendering engines.
 export const cities={
  paris:{name:'巴黎',english:'Paris',country:'FRANCE · 法國',zone:'Europe/Paris',lat:48.8584,lon:2.2945,codes:['PAR','CDG','ORY'],artPrefix:'paris',caption:'光，慢慢走過塞納河。',tagline:'A SLOW DAY IN PARIS',live:{name:'earthTV · 艾菲爾鐵塔',url:'https://www.earthtv.com/en/webcam/paris-eiffel-tower',type:'external'},water:{start:.82,left:.03,foreground:false,motion:{phase:1.73,rate:.67375,amplitude:4,band:.037,secondary:.081,drift:3.98125,direction:1}}},
@@ -15,7 +16,17 @@ export const periods=[
  {key:'evening',name:'夜晚',start:19,end:24,icon:'☽',description:'燈火與水色交會，夜晚緩緩展開。'}
 ];
 export function periodAt(hour){return periods.find(p=>hour>=p.start&&hour<p.end)||periods[0];}
-export function artUrl(city,period){return `assets/${cities[city].artPrefix}-${period.key}.jpg`;}
+const additions=[
+ ['sanfrancisco','USA · 美國','海霧輕輕，越過金門。','ABC7 · 灣區公開攝影機','https://abc7news.com/weather/cams/',.16],
+ ['munich','GERMANY · 德國','伊薩爾河，流過巴伐利亞的午後。','慕尼黑旅遊局 · 城市攝影機','https://www.munich.travel/en/webcam',.28],
+ ['london','UK · 英國','讓泰晤士河，帶走一點匆忙。','Abbey Road · 路口即時影像','https://www.abbeyroad.com/crossing?mode=live',.33],
+ ['barcelona','SPAIN · 西班牙','地中海的光，停在屋頂之間。','Port Olímpic · 港口攝影機','https://portolimpic.barcelona/es/meteo-y-webcams',.12],
+ ['newyork','USA · 美國','天際線很高，此刻可以很慢。','EarthCam · 時代廣場','https://www.earthcam.com/usa/newyork/timessquare/',.38]
+];
+additions.forEach(([id,country,caption,liveName,url,focus],i)=>{cities[id]={...locations[id],country,artPrefix:id,caption,tagline:`A SLOW DAY IN ${locations[id].english.toUpperCase()}`,live:{name:liveName,url,type:'external'},water:{start:id==='newyork'?.84:.85,left:0,foreground:false,focus,motion:{phase:2.4+i*1.39,rate:.47+i*.037,amplitude:3.5,band:.042+i*.005,secondary:.087+i*.009,drift:2.8+i*.17,direction:i%2?-1:1}}};});
+cities.paris.water.focus=.27;cities.taipei.water.focus=.76;
+export function cityInfo(id){const location=locations[id];return cities[id]?{...location,...cities[id]}:{...location,country:location.zone.split('/')[0],caption:'在同一個此刻，留一扇安靜的窗。',tagline:'A QUIET MOMENT',live:null,water:{start:.85,left:0,focus:.5,foreground:false,motion:{phase:3,rate:.5,amplitude:3,band:.05,secondary:.1,drift:3,direction:1}}};}
+export function artUrl(city,period){return cities[city]?.artPrefix?`assets/${cities[city].artPrefix}-${period.key}.jpg`:null;}
 
 
 
