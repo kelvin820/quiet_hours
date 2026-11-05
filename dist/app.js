@@ -5,6 +5,7 @@ import {parts,offset,previewInstant,pad} from './time-utils.js';
 import {Illustration} from './illustration.js';
 import {makeCity3D} from './scene3d.js';
 import {installImmersive} from './immersive.js';
+import {installMusic} from './music.js';
 const $=id=>document.getElementById(id),reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
 let motion=!reduceMotion.matches,preview=null,previewCity='taipei',touring=false,tourStart=0,tourMinute=0,lastFrame=0,lastTourMinute=-1,immersive=false;
 const models={},art={},modes={paris:'3d',taipei:'art'},activePeriods={};
@@ -12,6 +13,7 @@ try{const saved=JSON.parse(localStorage.getItem('quiet-hours.v2.modes'));for(con
 function card(city){const c=cities[city];return `<article class="city-card ${city}" id="${city}-card"><div class="scene" id="${city}-scene"><canvas class="model-canvas" id="${city}-canvas" aria-label="${c.name} 3D 城市日照場景"></canvas><div class="illustration-layer" id="${city}-illustration"><canvas class="art-canvas" id="${city}-art-canvas" aria-label="${c.name} 分時段動態插畫"></canvas><div class="cloud cloud-a"></div><div class="cloud cloud-b"></div></div><div class="scene-error" id="${city}-art-error" hidden><p>這幅插畫暫時未能載入</p><span>可以切換 3D 或稍後再試。</span><button class="quiet-button" data-retry="${city}">重新載入 ↻</button></div><div class="scene-error" id="${city}-fallback" hidden><p>此裝置無法顯示 3D</p><span>請切換 2D 插畫繼續觀看。</span></div><div class="scene-vignette"></div><div class="scene-top"><span class="scene-kind" id="${city}-kind">分時段插畫</span><span class="sun-label" id="${city}-light">計算中</span></div><div class="scene-caption"><span>${c.tagline}</span><p>${c.caption}</p></div><span class="period-caption" id="${city}-period"></span><div class="live-panel" id="${city}-live" hidden><span class="live-status">公開影像 · 外連觀看</span><p class="eyebrow">A WINDOW TO THE REAL WORLD</p><h3>看看此刻的${c.name}</h3><p>${c.live.name}<br>前往來源網站，觀看當地真實影像。</p><a href="${c.live.url}" target="_blank" rel="noopener noreferrer">開啟公開攝影機 ↗</a><small>影像可用性與延遲依來源網站為準</small></div></div><div class="city-details"><div class="place-line"><div class="place-name"><div class="mini-clock" aria-hidden="true"><i class="hand hour-hand" id="${city}-hour-hand"></i><i class="hand minute-hand" id="${city}-minute-hand"></i></div><div><span class="country">${c.country}</span><h2>${c.name} <span>${c.english}</span></h2></div></div><div class="mode-switch" aria-label="${c.name}顯示模式"><button data-city="${city}" data-mode="live" aria-pressed="false">Live View ↗</button><button data-city="${city}" data-mode="art" aria-pressed="false">2D 插畫</button><button data-city="${city}" data-mode="3d" aria-pressed="false">3D 動畫</button></div></div><div class="time-line"><time id="${city}-time">--:--</time><span class="seconds" id="${city}-seconds">--</span><span class="zone">${c.zone.replace('/',' / ')}</span></div><div class="city-meta"><span id="${city}-date">—</span><span id="${city}-solar">—</span></div><p class="mode-note" id="${city}-note"></p></div></article>`;}
 $('worlds').innerHTML=card('paris')+'<div class="between"><span class="between-line"></span><span id="difference">+7h</span><button id="swap" aria-label="交換兩地位置" title="交換兩地位置">⇄</button><span class="between-line"></span></div>'+card('taipei');
 const immersiveClocks=installImmersive(cities);
+installMusic();
 const current=()=>preview===null?new Date():new Date(preview);
 function solarState(date,c){const sun=getPosition(date,c.lat,c.lon);return {sun,day:THREE.MathUtils.smoothstep(sun.altitude,-7,9),gold:1-THREE.MathUtils.smoothstep(Math.abs(sun.altitude-2),0,20),label:sun.altitude>8?'日光':sun.altitude>0?'金色時刻':sun.altitude>-7?'暮光':'夜色'};}
 function solarTime(value,zone){return value instanceof Date&&!isNaN(value)?new Intl.DateTimeFormat('en-GB',{timeZone:zone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(value):'—';}
@@ -40,6 +42,7 @@ document.querySelectorAll('[data-retry]').forEach(b=>b.addEventListener('click',
 library();applyMotion();setInterval(()=>{if(!touring&&!document.hidden)updateTime();},1000);
 function frame(t){requestAnimationFrame(frame);if(document.hidden||t-lastFrame<1000/24)return;lastFrame=t;if(touring){const elapsed=(t-tourStart)/1000,minute=Math.floor((tourMinute+elapsed*24)%1440);if(minute!==lastTourMinute){lastTourMinute=minute;preview=+previewInstant(minute,cities[previewCity].zone);updateTime();}if(elapsed>=60){stopTour();updateTime();}}if(motion){for(const [city,model]of Object.entries(models))if(modes[city]==='3d')model?.animate(t/1000);for(const [city,illustration]of Object.entries(art))if(modes[city]==='art')illustration.render(t/1000,true);}}
 requestAnimationFrame(frame);document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTour();else updateTime();});
+
 
 
 

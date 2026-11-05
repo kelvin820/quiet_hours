@@ -12,3 +12,5 @@
 @keyframes willow-sway{from{transform:rotate(1.6deg) translate(3px,-2px)}to{transform:rotate(-2.2deg) translate(-8px,5px)}}
 @media(prefers-reduced-motion:reduce){.moving-foliage,.illustration-layer .cloud{animation:none}}
 .illustration-layer .cloud{opacity:var(--cloud-opacity,.32)}.illustration-layer .cloud-b{opacity:calc(var(--cloud-opacity,.32) * .72)}
+.moving-foliage{transition:filter 2.6s ease}.illustration-layer .cloud{transition:opacity 2.6s ease}@media(prefers-reduced-motion:reduce){.moving-foliage,.illustration-layer .cloud{transition:none}}
+@media(max-width:500px){.library-heading{flex-wrap:wrap;gap:12px}.library-heading>div{width:100%}.library-heading>p{max-width:none;width:100%;text-align:left}.library-heading h3{white-space:normal}}
