@@ -1,7 +1,7 @@
 // City metadata and eight illustrated periods are separate from rendering engines.
 export const cities={
- paris:{name:'巴黎',english:'Paris',country:'FRANCE · 法國',zone:'Europe/Paris',lat:48.8584,lon:2.2945,codes:['PAR','CDG','ORY'],artPrefix:'paris',caption:'光，慢慢走過塞納河。',tagline:'A SLOW DAY IN PARIS',live:{name:'earthTV · 艾菲爾鐵塔',url:'https://www.earthtv.com/en/webcam/paris-eiffel-tower',type:'external'},water:{start:.82,left:.03,foreground:false,motion:{phase:1.73,rate:.385,amplitude:4,band:.037,secondary:.081,drift:2.275,direction:1}}},
- taipei:{name:'台北',english:'Taipei',country:'TAIWAN · 台灣',zone:'Asia/Taipei',lat:25.033,lon:121.5654,codes:['TPE','TSA'],artPrefix:'taipei',caption:'把日常，留在溫柔的光裡。',tagline:'A SLOW DAY IN TAIPEI',live:{name:'台北旅遊網 · 城市即時影像',url:'https://travel.taipei/4k-livestream/',type:'external'},water:{start:.80,left:.05,foreground:true,motion:{phase:4.91,rate:.2625,amplitude:3.5,band:.058,secondary:.119,drift:1.575,direction:-1}}}
+ paris:{name:'巴黎',english:'Paris',country:'FRANCE · 法國',zone:'Europe/Paris',lat:48.8584,lon:2.2945,codes:['PAR','CDG','ORY'],artPrefix:'paris',caption:'光，慢慢走過塞納河。',tagline:'A SLOW DAY IN PARIS',live:{name:'earthTV · 艾菲爾鐵塔',url:'https://www.earthtv.com/en/webcam/paris-eiffel-tower',type:'external'},water:{start:.82,left:.03,foreground:false,motion:{phase:1.73,rate:.67375,amplitude:4,band:.037,secondary:.081,drift:3.98125,direction:1}}},
+ taipei:{name:'台北',english:'Taipei',country:'TAIWAN · 台灣',zone:'Asia/Taipei',lat:25.033,lon:121.5654,codes:['TPE','TSA'],artPrefix:'taipei',caption:'把日常，留在溫柔的光裡。',tagline:'A SLOW DAY IN TAIPEI',live:{name:'台北旅遊網 · 城市即時影像',url:'https://travel.taipei/4k-livestream/',type:'external'},water:{start:.80,left:.05,foreground:true,motion:{phase:4.91,rate:.459375,amplitude:3.5,band:.058,secondary:.119,drift:2.75625,direction:-1}}}
 };
 // Editorial eight-period proposal for this prototype, not a claim about the original project.
 export const periods=[
@@ -16,6 +16,7 @@ export const periods=[
 ];
 export function periodAt(hour){return periods.find(p=>hour>=p.start&&hour<p.end)||periods[0];}
 export function artUrl(city,period){return `assets/${cities[city].artPrefix}-${period.key}.jpg`;}
+
 
 
 
