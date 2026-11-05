@@ -5,7 +5,4 @@ node_modules/
 # Local QA artifacts
 preview-*.png
 preview-*.jpg
-artwork/originals/honolulu-*.png
-dist/assets/honolulu-*.jpg
-artwork/originals/mexicocity-*.png
-dist/assets/mexicocity-*.jpg
+
