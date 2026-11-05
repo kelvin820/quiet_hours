@@ -5,10 +5,6 @@ node_modules/
 # Local QA artifacts
 preview-*.png
 preview-*.jpg
-artwork/originals/tokyo-*.png
-dist/assets/tokyo-*.jpg
-artwork/originals/dubai-*.png
-dist/assets/dubai-*.jpg
 artwork/originals/riodejaneiro-*.png
 dist/assets/riodejaneiro-*.jpg
 artwork/originals/cairo-*.png
