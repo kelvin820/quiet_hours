@@ -1,0 +1,38 @@
+/* Glass MVP: stronger silhouettes and a lit rim, while scenery stays untouched. */
+.glass-analog{display:none}
+@property --glass-day{syntax:'<number>';inherits:true;initial-value:0}
+.hanging-sign{--glass-day:0;transition:--glass-day 2.6s ease}
+.immersive:not(.clock-style-c) .hanging-sign{gap:10px;padding:8px 12px}
+.immersive:not(.clock-style-c) .hanging-digital{font-size:clamp(88px,10.5vw,202px);font-weight:650;letter-spacing:.025em;line-height:1.05;color:#fff8de38;background:none;text-shadow:none;-webkit-text-stroke:1px #fffbe5b3;filter:drop-shadow(0 1px 1px #14201840)}
+@supports(background-clip:text){.immersive:not(.clock-style-c) .hanging-digital{background:linear-gradient(155deg,#fffde975 0%,#ebe7d126 22%,#d7d6c10d 42%,#fffde852 65%,#fff6cf66 80%,#e9e6cd1f 100%);background-clip:text;-webkit-background-clip:text;color:transparent}}
+.immersive:not(.clock-style-c) .hanging-city{font-size:13px;font-weight:500;letter-spacing:.35em;color:#fffbea;text-shadow:0 1px 3px #17211c,0 2px 12px #17211c99}
+@media(max-width:760px){.immersive:not(.clock-style-c) .hanging-digital{font-size:clamp(76px,19vw,140px)}.immersive:not(.clock-style-c) .hanging-city{font-size:12px}.immersive:not(.clock-style-c) .hanging-sign{gap:5px}}
+/* Night keeps the accepted clear glass; bright paint gets a smoked-glass rim. */
+.immersive:not(.clock-style-c) .hanging-digital{
+ --glass-tone:color-mix(in srgb,#fffde9 calc((1 - var(--glass-day))*100%),#414147);
+ -webkit-text-stroke-color:color-mix(in srgb,#fffbe5b3 calc((1 - var(--glass-day))*100%),#48474c94);
+}
+@supports(background-clip:text){.immersive:not(.clock-style-c) .hanging-digital{
+ background-image:linear-gradient(155deg,
+ color-mix(in srgb,var(--glass-tone) 46%,transparent) 0%,
+ color-mix(in srgb,var(--glass-tone) 15%,transparent) 22%,
+ color-mix(in srgb,var(--glass-tone) 5%,transparent) 42%,
+ color-mix(in srgb,var(--glass-tone) 32%,transparent) 65%,
+ color-mix(in srgb,var(--glass-tone) 40%,transparent) 80%,
+ color-mix(in srgb,var(--glass-tone) 12%,transparent) 100%);
+}}
+.immersive:not(.clock-style-c) .hanging-city{color:color-mix(in srgb,#fffbea calc((1 - var(--glass-day))*100%),#414147);text-shadow:0 1px 3px color-mix(in srgb,#17211c calc((1 - var(--glass-day))*100%),#fffbea99)}
+@media(prefers-reduced-motion:reduce){.hanging-sign{transition:none}}
+/* Compact alternative: a quiet horizontal capsule at the foot of each scene. */
+.immersive.clock-style-c .hanging-sign{flex-direction:row;gap:24px;padding:10px 23px;border-radius:999px;background:linear-gradient(110deg,#252d391a,#202b3524)!important;border:1px solid #fff8e41c!important;box-shadow:0 3px 16px #111b240d;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);max-width:calc(100% - 32px)}
+.immersive.clock-style-c .hanging-digital{flex:none;font-size:30px;font-weight:300;line-height:1.1;letter-spacing:.015em;background:none;color:#fff9eae6;text-shadow:0 1px 5px #17211c33;-webkit-text-stroke:0;filter:none}
+.immersive.clock-style-c .hanging-city{order:-1;min-width:0;padding:5px 0 5px .3em;font-size:10px;font-weight:500;line-height:1.5;letter-spacing:.3em;color:#fff9eae6;text-shadow:0 1px 5px #17211c44;overflow-wrap:normal}
+@media(max-width:760px){.immersive.clock-style-c .hanging-sign{gap:18px;padding:8px 18px}.immersive.clock-style-c .hanging-digital{font-size:25px}.immersive.clock-style-c .hanging-city{font-size:9px}}
+.immersive.clock-style-analog .hanging-digital{display:none}
+.immersive.clock-style-analog .glass-analog{display:block;width:clamp(145px,17vw,260px);overflow:visible;--analog-ink:color-mix(in srgb,#fff9e9 calc((1 - var(--glass-day))*100%),#44444b);filter:drop-shadow(0 1px 2px #17202a33)}
+.analog-rim{fill:none;stroke:var(--analog-ink);stroke-opacity:.4;stroke-width:.8}
+.analog-tick{stroke:var(--analog-ink);stroke-width:1.2;stroke-linecap:round}
+.analog-hand{fill:var(--analog-ink);fill-opacity:.2;stroke:var(--analog-ink);stroke-opacity:.85;stroke-width:1;stroke-linejoin:round}
+.analog-second{stroke:var(--analog-ink);stroke-width:.8;stroke-opacity:.65}
+.analog-hub{fill:var(--analog-ink);fill-opacity:.65;stroke:var(--analog-ink);stroke-width:.7}
+@media(max-width:760px){.immersive.clock-style-analog .glass-analog{width:clamp(130px,35vw,190px)}.immersive-controls{gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 26px)}}

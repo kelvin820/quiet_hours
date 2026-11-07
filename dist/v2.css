@@ -4,8 +4,8 @@
 .illustration-layer .cloud{width:145px;height:25px;top:14%;background:#fffbef;filter:blur(3px);opacity:.32;border-radius:55% 45% 45% 50%;animation:drifting-cloud 12s ease-in-out infinite alternate}
 .illustration-layer .cloud:before,.illustration-layer .cloud:after{content:'';position:absolute;background:inherit;border-radius:50%;bottom:2px;width:55%;height:140%;left:14%}.illustration-layer .cloud:after{left:48%;width:40%;height:105%}
 .illustration-layer .cloud-a{left:35%}.illustration-layer .cloud-b{left:64%;top:24%;width:105px;opacity:.23;animation-duration:16s;animation-direction:alternate-reverse}
-.moving-foliage{position:absolute;z-index:2;pointer-events:none;top:-12px;width:44%;max-width:420px;opacity:.93;filter:brightness(var(--leaf-brightness,1)) saturate(.85);will-change:transform;animation:leaf-sway 7s ease-in-out infinite alternate;transform-origin:top left}
-.taipei .moving-foliage{left:-15px}.paris .moving-foliage{right:-15px;transform-origin:top right;animation-name:willow-sway;animation-duration:8.5s}
+.moving-foliage{position:absolute;z-index:2;pointer-events:none;top:-12px;width:44%;max-width:420px;opacity:.93;filter:brightness(var(--leaf-brightness,1)) saturate(.85);will-change:transform;animation:leaf-sway 3.5s ease-in-out infinite alternate;transform-origin:top left}
+.taipei .moving-foliage{left:-15px}.paris .moving-foliage{right:-15px;transform-origin:top right;animation-name:willow-sway;animation-duration:4.25s}
 .still .moving-foliage{animation-play-state:paused!important}
 @keyframes drifting-cloud{from{transform:translateX(-35px)}to{transform:translateX(85px)}}
 @keyframes leaf-sway{from{transform:rotate(-1.8deg) translate(-3px,-1px)}to{transform:rotate(2deg) translate(9px,4px)}}
