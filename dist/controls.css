@@ -52,12 +52,12 @@ body:not(.immersive) .intro::after {
 .immersive-entry:hover { background: #edf0e6; border-color: #bdc9b7; }
 .immersive-entry:active { transform: translateY(1px); }
 
-body:not(.immersive) :is(.quiet-button, .play-button, .mode-switch button, .music-cities button, #music-play, #swap, .city-choose) {
+body:not(.immersive) :is(.quiet-button, .play-button, .music-cities button, #music-play, #swap, .city-choose) {
   min-height: 44px;
   color: var(--control-ink);
 }
 
-body:not(.immersive) :is(.quiet-button, .play-button, .mode-switch button, .music-cities button, #music-play, #swap, .city-choose):hover {
+body:not(.immersive) :is(.quiet-button, .play-button, .music-cities button, #music-play, #swap, .city-choose):hover {
   background: #e4eadd;
 }
 
@@ -86,26 +86,14 @@ body:not(.immersive) .city-choose > .city-choose-action {
   font: 600 10px var(--sans);
 }
 
-body:not(.immersive) :is(.mode-switch, .music-cities) {
+body:not(.immersive) .music-cities {
   gap: 3px;
   padding: 3px;
   border: 0;
   background: #edf0e7;
 }
 
-body:not(.immersive) .mode-switch {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-}
-
-body:not(.immersive) .mode-switch button {
-  padding-inline: 7px;
-  white-space: normal;
-  font-size: 11px;
-}
-
-body:not(.immersive) :is(.mode-switch button, .music-cities button)[aria-pressed="true"] {
+body:not(.immersive) .music-cities button[aria-pressed="true"] {
   background: #fcfbf5;
   color: #243f31;
   box-shadow: 0 1px 5px #20382b20;
@@ -133,7 +121,6 @@ body:not(.immersive) .timeline-top select {
 @media (max-width: 760px) {
   body:not(.immersive) .masthead { height: 65px; }
   body:not(.immersive) .intro { padding: 12px 0 16px; }
-  body:not(.immersive) .mode-switch { width: 100%; }
   body:not(.immersive) .timeline-top label { min-width: 0; }
   body:not(.immersive) .timeline-top select { max-width: 100%; }
 }
