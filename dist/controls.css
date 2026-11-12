@@ -1,0 +1,141 @@
+body:not(.immersive) {
+  --control-ink: #344b3e;
+  --control-surface: #e7ebdf;
+}
+
+body:not(.immersive) .masthead { height: 76px; }
+
+body:not(.immersive) .intro {
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 40px);
+  padding: 17px 0 22px;
+}
+
+body:not(.immersive) .intro::before,
+body:not(.immersive) .intro::after {
+  content: '';
+  width: min(14vw, 120px);
+  height: 1px;
+  background: #d7dacd;
+}
+
+.immersive-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  flex: none;
+  min-height: 52px;
+  padding: 5px 16px 5px 6px;
+  border: 1px solid #e1e0d2;
+  border-radius: 999px;
+  background: #fcfaf2;
+  box-shadow: 0 3px 10px #25372b12;
+  color: #263d32;
+  font: 650 14px var(--sans);
+  letter-spacing: .035em;
+}
+
+.fullscreen-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #314b40;
+  color: #fff9e7;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.entry-arrow { color: #586c5b; font-size: 14px; }
+.immersive-entry:hover { background: #edf0e6; border-color: #bdc9b7; }
+.immersive-entry:active { transform: translateY(1px); }
+
+body:not(.immersive) :is(.quiet-button, .play-button, .music-cities button, #music-play, #swap, .city-choose) {
+  min-height: 44px;
+  color: var(--control-ink);
+}
+
+body:not(.immersive) :is(.quiet-button, .play-button, .music-cities button, #music-play, #swap, .city-choose):hover {
+  background: #e4eadd;
+}
+
+body:not(.immersive) :is(button, select):focus-visible {
+  outline: 2px solid #386650;
+  outline-offset: 3px;
+}
+
+body:not(.immersive) .city-details > .country {
+  display: block;
+  margin: 0 0 4px 60px;
+}
+
+body:not(.immersive) .place-line {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+body:not(.immersive) .place-name h2 { margin: 0; }
+
+@media (max-width: 1200px) {
+  body:not(.immersive) .city-details > .country { margin-left: 0; }
+}
+
+body:not(.immersive) .city-choose {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+body:not(.immersive) .city-choose > span { color: #586858; }
+body:not(.immersive) .city-choose > .city-choose-action {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--control-surface);
+  color: var(--control-ink);
+  font: 600 10px var(--sans);
+}
+
+body:not(.immersive) .music-cities {
+  gap: 3px;
+  padding: 3px;
+  border: 0;
+  background: #edf0e7;
+}
+
+body:not(.immersive) .music-cities button[aria-pressed="true"] {
+  background: #fcfbf5;
+  color: #243f31;
+  box-shadow: 0 1px 5px #20382b20;
+  font-weight: 700;
+}
+
+body:not(.immersive) #swap {
+  width: 44px;
+  border: 0;
+  background: var(--control-surface);
+  font-size: 18px;
+}
+
+body:not(.immersive) #motion,
+body:not(.immersive) #reset { padding-inline: 12px; border-radius: 999px; }
+
+body:not(.immersive) .timeline-top select {
+  min-height: 44px;
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: #f5f6ed;
+  color: var(--control-ink);
+}
+
+@media (max-width: 760px) {
+  body:not(.immersive) .masthead { height: 65px; }
+  body:not(.immersive) .intro { padding: 12px 0 16px; }
+  body:not(.immersive) .timeline-top label { min-width: 0; }
+  body:not(.immersive) .timeline-top select { max-width: 100%; }
+}
