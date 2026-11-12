@@ -66,7 +66,22 @@ body:not(.immersive) :is(button, select):focus-visible {
   outline-offset: 3px;
 }
 
-body:not(.immersive) .place-line { flex-wrap: wrap; gap: 8px 12px; }
+body:not(.immersive) .city-details > .country {
+  display: block;
+  margin: 0 0 4px 60px;
+}
+
+body:not(.immersive) .place-line {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+body:not(.immersive) .place-name h2 { margin: 0; }
+
+@media (max-width: 1200px) {
+  body:not(.immersive) .city-details > .country { margin-left: 0; }
+}
 
 body:not(.immersive) .city-choose {
   display: inline-flex;
