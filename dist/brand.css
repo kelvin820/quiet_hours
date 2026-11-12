@@ -1,0 +1,38 @@
+.brand-logo {
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex: none;
+}
+
+.author-credit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #53624e;
+}
+
+.author-credit img {
+  display: block;
+  width: 52px;
+  height: 52px;
+}
+
+.author-name {
+  display: block;
+  font: 600 11px var(--sans);
+  letter-spacing: .12em;
+}
+
+.author-credit small {
+  display: block;
+  margin-top: 4px;
+  font: 10px var(--sans);
+}
+
+@media (max-width: 760px) {
+  .brand-logo {
+    width: 38px;
+    height: 38px;
+  }
+}
